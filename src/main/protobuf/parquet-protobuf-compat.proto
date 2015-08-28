@@ -1,0 +1,5 @@
+package com.databricks.protobuf;
+
+message ProtoIntArray {
+  repeated int32 f = 1;
+}

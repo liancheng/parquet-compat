@@ -1,0 +1,10 @@
+@namespace("com.databricks.avro")
+protocol ParquetAvroCompat {
+  record AvroIntArray {
+    array<int> f;
+  }
+
+  record AvroArrayOfIntArray {
+    array<array<int>> f;
+  }
+}
