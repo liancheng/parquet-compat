@@ -1,6 +1,8 @@
+package com.databricks
+
 import scala.collection.JavaConverters.seqAsJavaListConverter
 
-import com.databricks.avro.{AvroNullableIntArray, AvroArrayOfIntArray, AvroIntArray}
+import com.databricks.avro.{AvroArrayOfIntArray, AvroIntArray, AvroNullableIntArray}
 import com.databricks.protobuf.ParquetProtobufCompat.ProtoIntArray
 import com.databricks.thrift.ThriftIntArray
 import org.apache.hadoop.conf.Configuration
@@ -77,5 +79,81 @@ object ProtoToAvro {
     val avroReader = AvroParquetReader.builder[AvroIntArray](path).build()
     println(avroReader.read())
     avroReader.close()
+  }
+}
+
+object Write {
+  import DirectParquetWriter._
+
+  def main(args: Array[String]): Unit = {
+    val schema =
+      """message m {
+        |  optional group f0 (LIST) {
+        |    repeated int32 array;
+        |  }
+        |}
+      """.stripMargin
+
+    writeDirect(args.head, schema) { writer =>
+      message(writer) { rc =>
+        field(rc, "f0", 0) {
+          group(rc) {
+            field(rc, "array", 0) {
+              rc.addInteger(0)
+              rc.addInteger(1)
+            }
+          }
+        }
+      }
+
+      message(writer) { rc =>
+        field(rc, "f0", 0) {
+          group(rc) {
+            field(rc, "array", 0) {
+              rc.addInteger(2)
+              rc.addInteger(3)
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+object WriteWithImplicits {
+  import DirectParquetWriter._
+
+  def main(args: Array[String]): Unit = {
+    val schema =
+      """message m {
+        |  optional group f0 (LIST) {
+        |    repeated int32 array;
+        |  }
+        |}
+      """.stripMargin
+
+    writeDirect(args.head, schema) { implicit writer =>
+      message { implicit recordConsumer =>
+        field("f0", 0) {
+          group {
+            field("array", 0) {
+              recordConsumer.addInteger(0)
+              recordConsumer.addInteger(1)
+            }
+          }
+        }
+      }
+
+      message { implicit recordConsumer =>
+        field("f0", 0) {
+          group {
+            field("array", 0) {
+              recordConsumer.addInteger(2)
+              recordConsumer.addInteger(3)
+            }
+          }
+        }
+      }
+    }
   }
 }

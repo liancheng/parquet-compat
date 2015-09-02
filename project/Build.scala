@@ -38,8 +38,6 @@ object Build extends sbt.Build {
       sourceDirectory in Avro.avroConfig <<= sourceDirectory(_ / "main" / "avro"),
       // Location of generated Java files
       javaSource in Avro.avroConfig <<= sourceManaged(_ / "main" / "avro" / "gen-java"),
-      // Appends Avro generated Java source directory to managed source directories
-      managedSourceDirectories in Compile <+= sourceManaged(_ / "main" / "avro" / "gen-java"),
       // Avro version
       version in Avro.avroConfig := Dependencies.Versions.avro)
 
@@ -49,7 +47,7 @@ object Build extends sbt.Build {
       Thrift.thriftSourceDir in Thrift.Thrift <<= sourceDirectory(_ / "main" / "thrift"),
       // Location of the generated "gen-java" folder
       Thrift.thriftOutputDir in Thrift.Thrift <<= sourceManaged(_ / "main" / "thrift"),
-      // Appends Thrift generated Java source directory to managed source directories
+      // Appends the generated "gen-java" folder to managed source directories
       managedSourceDirectories in Compile <+= sourceManaged(_ / "main" / "thrift" / "gen-java"))
 
   lazy val protobufSettings =
@@ -57,9 +55,7 @@ object Build extends sbt.Build {
       // Location of ProtocolBuffer source files
       sourceDirectory in ProtoBuf.protobufConfig <<= sourceDirectory(_ / "main" / "protobuf"),
       // Location of generated Java files
-      javaSource in ProtoBuf.protobufConfig <<= sourceManaged(_ / "main" / "proto" / "gen-java"),
-      // Appends Avro generated Java source directory to managed source directories
-      managedSourceDirectories in Compile <+= sourceManaged(_ / "main" / "proto" / "gen-java"))
+      javaSource in ProtoBuf.protobufConfig <<= sourceManaged(_ / "main" / "proto" / "gen-java"))
 }
 
 object Dependencies {
