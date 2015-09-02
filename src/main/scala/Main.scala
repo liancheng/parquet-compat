@@ -1,6 +1,6 @@
 import scala.collection.JavaConverters.seqAsJavaListConverter
 
-import com.databricks.avro.{AvroArrayOfIntArray, AvroIntArray}
+import com.databricks.avro.{AvroNullableIntArray, AvroArrayOfIntArray, AvroIntArray}
 import com.databricks.protobuf.ParquetProtobufCompat.ProtoIntArray
 import com.databricks.thrift.ThriftIntArray
 import org.apache.hadoop.conf.Configuration
@@ -10,9 +10,19 @@ import org.apache.parquet.hadoop.metadata.CompressionCodecName
 import org.apache.parquet.proto.ProtoParquetWriter
 import org.apache.parquet.thrift.{ThriftParquetReader, ThriftParquetWriter}
 
-object AvroArrayOfPrimitiveArraySchema{
+object AvroArrayOfIntArrayTest {
   def main(args: Array[String]): Unit = {
     val schema = AvroArrayOfIntArray.getClassSchema
+    println(schema.toString(true))
+
+    val messageType = new AvroSchemaConverter().convert(schema)
+    println(messageType)
+  }
+}
+
+object AvroNullableIntArrayTest {
+  def main(args: Array[String]) {
+    val schema = AvroNullableIntArray.getClassSchema
     println(schema.toString(true))
 
     val messageType = new AvroSchemaConverter().convert(schema)
@@ -67,10 +77,5 @@ object ProtoToAvro {
     val avroReader = AvroParquetReader.builder[AvroIntArray](path).build()
     println(avroReader.read())
     avroReader.close()
-  }
-}
-
-object Hive {
-  def main(args: Array[String]) {
   }
 }

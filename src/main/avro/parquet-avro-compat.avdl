@@ -4,6 +4,10 @@ protocol ParquetAvroCompat {
     array<int> f;
   }
 
+  record AvroNullableIntArray {
+    array<union { null, int }> f;
+  }
+
   record AvroArrayOfIntArray {
     array<array<int>> f;
   }
