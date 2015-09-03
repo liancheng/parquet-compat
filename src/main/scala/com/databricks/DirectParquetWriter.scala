@@ -60,8 +60,16 @@ object DirectParquetWriter {
     consumer.endGroup()
   }
 
+  def field(name: String)(f: => Unit)(implicit consumer: RecordConsumer): Unit = {
+    field(consumer, name)(f)
+  }
+
   def field(name: String, index: Int)(f: => Unit)(implicit consumer: RecordConsumer): Unit = {
     field(consumer, name, index)(f)
+  }
+
+  def field(consumer: RecordConsumer, name: String)(f: => Unit): Unit = {
+    field(consumer, name, 0)(f)
   }
 
   def field(consumer: RecordConsumer, name: String, index: Int)(f: => Unit): Unit = {

@@ -134,9 +134,9 @@ object WriteWithImplicits {
 
     writeDirect(args.head, schema) { implicit writer =>
       message { implicit recordConsumer =>
-        field("f0", 0) {
+        field("f0") {
           group {
-            field("array", 0) {
+            field("array") {
               recordConsumer.addInteger(0)
               recordConsumer.addInteger(1)
             }
@@ -145,9 +145,9 @@ object WriteWithImplicits {
       }
 
       message { implicit recordConsumer =>
-        field("f0", 0) {
+        field("f0") {
           group {
-            field("array", 0) {
+            field("array") {
               recordConsumer.addInteger(2)
               recordConsumer.addInteger(3)
             }
