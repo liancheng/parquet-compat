@@ -1,10 +1,10 @@
-@namespace("com.databricks.avro")
+@namespace("com.databricks.parquet.avro")
 protocol ParquetAvroCompat {
   record AvroIntArray {
     array<int> f;
   }
 
-  record AvroNullableIntArray {
+  record AvroArrayOfOptionalInt {
     array<union { null, int }> f;
   }
 

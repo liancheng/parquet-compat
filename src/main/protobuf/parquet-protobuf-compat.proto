@@ -1,4 +1,4 @@
-package com.databricks.protobuf;
+package com.databricks.parquet.protobuf;
 
 message ProtoIntArray {
   repeated int32 f = 1;
