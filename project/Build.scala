@@ -67,6 +67,7 @@ object Dependencies {
     val elephantBird = "4.4"
     val hadoop = "1.2.1"
     val jackson = "1.9.13"
+    val log4j = "1.2.16"
     val parquet = "1.7.0"
     val protobuf = "2.5.0"
     val slf4j = "1.6.4"
@@ -74,10 +75,26 @@ object Dependencies {
     val thrift = "0.9.2"
   }
 
+  val avro = Seq(
+    "org.apache.avro" % "avro" % Versions.avro)
+
   val commons = Seq(
     "commons-codec" % "commons-codec" % Versions.commonsCodec,
     "commons-lang" % "commons-lang" % Versions.commonsLang,
     "commons-logging" % "commons-logging" % Versions.commonsLogging)
+
+  val elephantBird = Seq(
+    "com.twitter.elephantbird" % "elephant-bird-core" % Versions.elephantBird)
+
+  val jackson = Seq(
+    "org.codehaus.jackson" % "jackson-core-asl" % Versions.jackson,
+    "org.codehaus.jackson" % "jackson-mapper-asl" % Versions.jackson)
+
+  val hadoop = Seq(
+    "org.apache.hadoop" % "hadoop-core" % Versions.hadoop)
+
+  val log4j = Seq(
+    "log4j" % "log4j" % Versions.log4j)
 
   val parquet = Seq(
     "org.apache.parquet" % "parquet-avro" % Versions.parquet,
@@ -85,22 +102,21 @@ object Dependencies {
     "org.apache.parquet" % "parquet-protobuf" % Versions.parquet,
     "org.apache.parquet" % "parquet-hive" % Versions.parquet)
 
-  val hadoop = Seq(
-    "org.apache.hadoop" % "hadoop-core" % Versions.hadoop)
+  val protobuf = Seq(
+    "com.google.protobuf" % "protobuf-java" % Versions.protobuf)
+
+  val slf4j = Seq(
+    "org.slf4j" % "slf4j-api" % Versions.slf4j,
+    "org.slf4j" % "slf4j-log4j12" % Versions.slf4j)
+
+  val snappy = Seq(
+    "org.xerial.snappy" % "snappy-java" % Versions.snappy)
 
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % Versions.thrift)
 
-  val jackson = Seq(
-    "org.codehaus.jackson" % "jackson-core-asl" % Versions.jackson,
-    "org.codehaus.jackson" % "jackson-mapper-asl" % Versions.jackson)
+  val all = hadoop ++ log4j ++ parquet ++ slf4j ++ thrift
 
-  val all = hadoop ++ parquet ++ thrift
-
-  val overrides = Set(
-    "com.google.protobuf" % "protobuf-java" % Versions.protobuf,
-    "com.twitter.elephantbird" % "elephant-bird-core" % Versions.elephantBird,
-    "org.apache.avro" % "avro" % Versions.avro,
-    "org.slf4j" % "slf4j-api" % Versions.slf4j,
-    "org.xerial.snappy" % "snappy-java" % Versions.snappy) ++ commons ++ jackson ++ thrift
+  val overrides =
+    (avro ++ commons ++ elephantBird ++ jackson ++ protobuf ++ snappy ++ thrift ++ slf4j).toSet
 }
