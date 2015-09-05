@@ -107,7 +107,8 @@ object Dependencies {
 
   val slf4j = Seq(
     "org.slf4j" % "slf4j-api" % Versions.slf4j,
-    "org.slf4j" % "slf4j-log4j12" % Versions.slf4j)
+    "org.slf4j" % "slf4j-log4j12" % Versions.slf4j,
+    "org.slf4j" % "jul-to-slf4j" % Versions.slf4j)
 
   val snappy = Seq(
     "org.xerial.snappy" % "snappy-java" % Versions.snappy)
