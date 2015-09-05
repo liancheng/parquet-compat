@@ -1,10 +1,10 @@
 package com.databricks.parquet.interop
 
 import scala.collection.JavaConverters._
-import com.databricks.parquet.utils._
+
 import com.databricks.parquet.avro.AvroIntArray
 import com.databricks.parquet.protobuf.ParquetProtobufCompat.ProtoIntArray
-import com.twitter.elephantbird.util.Protobufs
+import com.databricks.parquet.utils._
 import org.apache.parquet.avro.AvroParquetReader
 import org.apache.parquet.proto.ProtoParquetWriter
 
@@ -15,7 +15,7 @@ object ProtoToAvro {
 
     println(
       s"""ProtoBuf descriptor:
-         |${Protobufs.getMessageDescriptor(classOf[ProtoIntArray]).toProto}
+         |${ProtoIntArray.getDescriptor.toProto}
        """.stripMargin)
 
     val protoWriter = new ProtoParquetWriter[ProtoIntArray](path, classOf[ProtoIntArray])

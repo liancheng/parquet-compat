@@ -3,3 +3,9 @@ package com.databricks.parquet.protobuf;
 message ProtoIntArray {
   repeated int32 f = 1;
 }
+
+message ProtoArrayOfOptionalInt {
+  repeated group Array = 1 {
+    optional int32 Element = 2;
+  }
+}
