@@ -1,4 +1,4 @@
-This is an experimental repository used to investigate various Parquet compatibility/interoperability issues among various Parquet data model implementations like parquet-avro, parquet-thrift, and parquet-protobuf.  It contains:
+This repository is a playground for investigating various Parquet compatibility/interoperability issues among various Parquet data model implementations like parquet-avro, parquet-thrift, and parquet-protobuf.  It contains:
 
 - Code samples that illustrate various compatibility/interoperability issues.
 - A Scala DSL for constructing Parquet files with arbitrary complex structures.
@@ -63,5 +63,9 @@ This is an experimental repository used to investigate various Parquet compatibi
     }
 
     // Exiting paste mode, now interpreting.
+
+.. note::
+
+  Everything in this repository are subject to change.  It's neither a library nor an application for daily use, but just a playground.
 
 __ https://blog.twitter.com/2013/dremel-made-simple-with-parquet
