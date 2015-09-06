@@ -1,4 +1,5 @@
 import com.github.bigtoast.sbtthrift.{ThriftPlugin => Thrift}
+import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import sbt.Keys._
 import sbt._
 import sbtavro.{SbtAvro => Avro}
@@ -22,7 +23,7 @@ object Build extends sbt.Build {
       javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-g"))
 
   lazy val dependencySettings =
-    Seq(
+    graphSettings ++ Seq(
       retrieveManaged := true,
       libraryDependencies ++= Dependencies.all,
       // Disables auto conflict resolution
@@ -68,7 +69,8 @@ object Dependencies {
     val hadoop = "1.2.1"
     val jackson = "1.9.13"
     val log4j = "1.2.16"
-    val parquet = "1.7.0"
+    val parquetFormat = "2.3.0-incubating"
+    val parquetMr = "1.7.0"
     val protobuf = "2.5.0"
     val slf4j = "1.6.4"
     val snappy = "1.1.1.6"
@@ -96,11 +98,14 @@ object Dependencies {
   val log4j = Seq(
     "log4j" % "log4j" % Versions.log4j)
 
-  val parquet = Seq(
-    "org.apache.parquet" % "parquet-avro" % Versions.parquet,
-    "org.apache.parquet" % "parquet-thrift" % Versions.parquet,
-    "org.apache.parquet" % "parquet-protobuf" % Versions.parquet,
-    "org.apache.parquet" % "parquet-hive" % Versions.parquet)
+  val parquetFormat = Seq(
+    "org.apache.parquet" % "parquet-format" % Versions.parquetFormat)
+
+  val parquetMr = Seq(
+    "org.apache.parquet" % "parquet-avro" % Versions.parquetMr,
+    "org.apache.parquet" % "parquet-thrift" % Versions.parquetMr,
+    "org.apache.parquet" % "parquet-protobuf" % Versions.parquetMr,
+    "org.apache.parquet" % "parquet-hive" % Versions.parquetMr)
 
   val protobuf = Seq(
     "com.google.protobuf" % "protobuf-java" % Versions.protobuf)
@@ -116,8 +121,9 @@ object Dependencies {
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % Versions.thrift)
 
-  val all = hadoop ++ log4j ++ parquet ++ slf4j ++ thrift
+  val all = hadoop ++ log4j ++ parquetMr ++ slf4j ++ thrift
 
-  val overrides =
-    (avro ++ commons ++ elephantBird ++ jackson ++ protobuf ++ snappy ++ thrift ++ slf4j).toSet
+  val overrides = Set.empty ++
+    avro ++ commons ++ elephantBird ++ jackson ++ parquetFormat ++
+    protobuf ++ snappy ++ thrift ++ slf4j
 }
