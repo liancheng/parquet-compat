@@ -70,7 +70,7 @@ object Dependencies {
     val jackson = "1.9.13"
     val log4j = "1.2.16"
     val parquetFormat = "2.3.0-incubating"
-    val parquetMr = "1.7.0"
+    val parquetMr = "1.8.1"
     val protobuf = "2.5.0"
     val slf4j = "1.6.4"
     val snappy = "1.1.1.6"

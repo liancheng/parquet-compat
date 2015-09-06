@@ -16,7 +16,7 @@ object ThriftToAvro {
 
     println(
       s"""Thrift type descriptor:
-         |${new ThriftSchemaConverter().toStructType(classOf[ThriftIntArray])}
+         |${ThriftSchemaConverter.toStructType(classOf[ThriftIntArray])}
        """.stripMargin)
 
     val thriftWriter =

@@ -20,7 +20,7 @@ object PARQUET_364 {
          |${"=" * 80}
          |Thrift schema and corresponding Parquet schema:
          |
-         |${new ThriftSchemaConverter().toStructType(classOf[ThriftArrayOfIntArray])}
+         |${ThriftSchemaConverter.toStructType(classOf[ThriftArrayOfIntArray])}
          |
          |${new ThriftSchemaConverter().convert(classOf[ThriftArrayOfIntArray])}
          |${"=" * 80}
