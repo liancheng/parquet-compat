@@ -11,4 +11,13 @@ protocol ParquetAvroCompat {
   record AvroArrayOfIntArray {
     array<array<int>> f;
   }
+
+  record AvroNestedRecord {
+    union { null, int } c;
+    union { null, int } d;
+  }
+
+  record AvroSchemaMergingHelper {
+    AvroNestedRecord n;
+  }
 }
