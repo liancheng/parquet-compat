@@ -12,7 +12,7 @@ import org.apache.parquet.thrift.{ThriftParquetWriter, ThriftSchemaConverter}
 // This works.
 object ThriftToAvro {
   def main(args: Array[String]) {
-    val path = cleanPath(args.head)
+    val path = outputPath(args)
 
     println(
       s"""Thrift type descriptor:

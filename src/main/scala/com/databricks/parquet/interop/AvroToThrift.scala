@@ -11,7 +11,7 @@ import org.apache.parquet.thrift.ThriftParquetReader
 // extra metadata.
 object AvroToThrift {
   def main(args: Array[String]) {
-    val path = cleanPath(args.head)
+    val path = outputPath(args)
 
     println(
       s"""Avro schema:
