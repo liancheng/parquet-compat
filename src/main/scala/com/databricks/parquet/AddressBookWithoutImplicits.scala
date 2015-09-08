@@ -25,9 +25,7 @@ object AddressBookWithoutImplicits {
 
     writeDirect(path, schema) { writer =>
       message(writer) { rc =>
-        field(rc, 0, "owner") {
-          string(rc, "Julien Le Dem")
-        }
+        field(rc, 0, "owner", string(rc, "Julien Le Dem"))
 
         field(rc, 1, "ownerPhoneNumbers") {
           string(rc, "555 123 4567")
@@ -36,27 +34,18 @@ object AddressBookWithoutImplicits {
 
         field(rc, 2, "contacts") {
           group(rc) {
-            field(rc, 0, "name") {
-              string(rc, "Dmitriy Ryaboy")
-            }
-
-            field(rc, 1, "phoneNumber") {
-              string(rc, "555 987 6543")
-            }
+            field(rc, 0, "name", string(rc, "Dmitriy Ryaboy"))
+            field(rc, 1, "phoneNumber", string(rc, "555 987 6543"))
           }
 
           group(rc) {
-            field(rc, 0, "name") {
-              string(rc, "Chris Aniszczyk")
-            }
+            field(rc, 0, "name", string(rc, "Chris Aniszczyk"))
           }
         }
       }
 
       message(writer) { rc =>
-        field(rc, 0, "owner") {
-          string(rc, "A. Nonymous")
-        }
+        field(rc, 0, "owner", string(rc, "A. Nonymous"))
       }
     }
   }
