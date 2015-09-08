@@ -1,10 +1,15 @@
 package com.databricks.parquet
 
-import com.databricks.parquet.utils.cleanPath
+import com.databricks.parquet.utils._
 
-// https://blog.twitter.com/2013/dremel-made-simple-with-parquet
+// An DSL example that builds the sample Parquet file described in the following blog post:
+//
+//   https://blog.twitter.com/2013/dremel-made-simple-with-parquet
+//
+// This example shows the DSL API using implicits.
 object AddressBook {
   def main(args: Array[String]) {
+    val path = outputPath(args).toString
     val schema =
       """message AddressBook {
         |  required binary owner (UTF8);
@@ -18,7 +23,7 @@ object AddressBook {
 
     import com.databricks.parquet.dsl._
 
-    writeDirect(cleanPath(args.head).toString, schema) { implicit writer =>
+    writeDirect(path, schema) { implicit writer =>
       message { implicit consumer =>
         field(0, "owner") {
           string("Julien Le Dem")
