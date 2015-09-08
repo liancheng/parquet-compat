@@ -11,7 +11,7 @@ import org.apache.parquet.proto.ProtoParquetWriter
 // This fails, because parquet-protobuf and parquet-avro generate incompatible schemas.
 object ProtoToAvro {
   def main(args: Array[String]) {
-    val path = cleanPath(args.head)
+    val path = outputPath(args)
 
     println(
       s"""ProtoBuf descriptor:
