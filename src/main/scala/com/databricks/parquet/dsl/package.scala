@@ -75,6 +75,14 @@ package object dsl {
     field(consumer, index, name)(f)
   }
 
+  def field(index: Int, name: String, f: => Unit)(implicit consumer: RecordConsumer): Unit = {
+    field(consumer, index, name)(f)
+  }
+
+  def field(consumer: RecordConsumer, index: Int, name: String, f: => Unit): Unit = {
+    field(consumer, index, name)(f)
+  }
+
   def field(consumer: RecordConsumer, index: Int, name: String)(f: => Unit): Unit = {
     consumer.startField(name, index)
     f

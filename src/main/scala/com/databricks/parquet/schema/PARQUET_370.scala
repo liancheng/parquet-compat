@@ -24,8 +24,8 @@ object PARQUET_370 {
       message { implicit consumer =>
         field(0, "n") {
           group {
-            field(0, "a") { int(0) }
-            field(1, "b") { int(1) }
+            field(0, "a", int(0))
+            field(1, "b", int(1))
           }
         }
       }
