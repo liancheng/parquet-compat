@@ -21,9 +21,11 @@ package object dsl {
   def writeDirect
       (path: Path, schema: String, metadata: Map[String, String])
       (f: ParquetWriter[RecordBuilder] => Unit): Unit = {
-    val messageType = MessageTypeParser.parseMessageType(schema)
-    val writeSupport = new DirectWriteSupport(messageType, metadata)
-    val parquetWriter = new ParquetWriter[RecordBuilder](path, writeSupport)
+    val parquetWriter = DirectParquetWriter.builder(path)
+      .withSchema(MessageTypeParser.parseMessageType(schema))
+      .withMetadata(metadata)
+      .build()
+
     try f(parquetWriter) finally parquetWriter.close()
   }
 
