@@ -1,4 +1,4 @@
-package com.databricks.parquet
+package com.databricks.parquet.examples
 
 import com.databricks.parquet.utils._
 
@@ -25,7 +25,9 @@ object AddressBook {
 
     writeDirect(path, schema) { implicit writer =>
       message { implicit consumer =>
-        field(0, "owner", string("Julien Le Dem"))
+        field(0, "owner") {
+          string("Julien Le Dem")
+        }
 
         field(1, "ownerPhoneNumbers") {
           string("555 123 4567")
@@ -34,18 +36,27 @@ object AddressBook {
 
         field(2, "contacts") {
           group {
-            field(0, "name", string("Dmitriy Ryaboy"))
-            field(1, "phoneNumber", string("555 987 6543"))
+            field(0, "name") {
+              string("Dmitriy Ryaboy")
+            }
+
+            field(1, "phoneNumber") {
+              string("555 987 6543")
+            }
           }
 
           group {
-            field(0, "name", string("Chris Aniszczyk"))
+            field(0, "name") {
+              string("Chris Aniszczyk")
+            }
           }
         }
       }
 
       message { implicit consumer =>
-        field(0, "owner", string("A. Nonymous"))
+        field(0, "owner") {
+          string("A. Nonymous")
+        }
       }
     }
   }

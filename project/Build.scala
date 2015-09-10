@@ -18,7 +18,7 @@ object Build extends sbt.Build {
     Seq(
       organization := "com.databricks",
       version := "0.1.0-SNAPSHOT",
-      scalaVersion := "2.10.4",
+      scalaVersion := Dependencies.Versions.scala,
       scalacOptions ++= Seq("-unchecked", "-deprecation"),
       javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-g"))
 
@@ -72,6 +72,8 @@ object Dependencies {
     val parquetFormat = "2.3.0-incubating"
     val parquetMr = "1.8.1"
     val protobuf = "2.5.0"
+    val scala = "2.10.4"
+    val scalaTest = "2.2.5"
     val slf4j = "1.6.4"
     val snappy = "1.1.1.6"
     val thrift = "0.9.2"
@@ -110,6 +112,12 @@ object Dependencies {
   val protobuf = Seq(
     "com.google.protobuf" % "protobuf-java" % Versions.protobuf)
 
+  val scala = Seq(
+    "org.scala-lang" % "scala-library" % Versions.scala)
+
+  val scalaTest = Seq(
+    "org.scalatest" %% "scalatest" % Versions.scalaTest % "test")
+
   val slf4j = Seq(
     "org.slf4j" % "slf4j-api" % Versions.slf4j,
     "org.slf4j" % "slf4j-log4j12" % Versions.slf4j,
@@ -121,9 +129,9 @@ object Dependencies {
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % Versions.thrift)
 
-  val all = hadoop ++ log4j ++ parquetMr ++ slf4j ++ thrift
+  val all = hadoop ++ log4j ++ parquetMr ++ scalaTest ++ slf4j ++ thrift
 
   val overrides = Set.empty ++
     avro ++ commons ++ elephantBird ++ jackson ++ parquetFormat ++
-    protobuf ++ snappy ++ thrift ++ slf4j
+    protobuf ++ scala ++ snappy ++ thrift ++ slf4j
 }

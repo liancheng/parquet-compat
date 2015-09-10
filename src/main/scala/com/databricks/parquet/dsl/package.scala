@@ -1,38 +1,12 @@
 package com.databricks.parquet
 
-
-import scala.collection.JavaConverters._
-
-import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 import org.apache.parquet.hadoop.ParquetWriter
-import org.apache.parquet.hadoop.api.WriteSupport
-import org.apache.parquet.hadoop.api.WriteSupport.WriteContext
 import org.apache.parquet.io.api.{Binary, RecordConsumer}
-import org.apache.parquet.schema.{MessageType, MessageTypeParser}
+import org.apache.parquet.schema.MessageTypeParser
 
 package object dsl {
   type RecordBuilder = RecordConsumer => Unit
-
-  private class DirectWriteSupport(schema: MessageType, metadata: Map[String, String])
-    extends WriteSupport[RecordConsumer => Unit] {
-
-    private var recordConsumer: RecordConsumer = _
-
-    override def init(configuration: Configuration): WriteContext = {
-      new WriteContext(schema, metadata.asJava)
-    }
-
-    override def write(writeRecord: RecordBuilder): Unit = {
-      recordConsumer.startMessage()
-      writeRecord(recordConsumer)
-      recordConsumer.endMessage()
-    }
-
-    override def prepareForWrite(recordConsumer: RecordConsumer): Unit = {
-      this.recordConsumer = recordConsumer
-    }
-  }
 
   def writeDirect(path: String, schema: String)(f: ParquetWriter[RecordBuilder] => Unit): Unit = {
     writeDirect(new Path(path), schema, Map.empty[String, String])(f)
@@ -72,14 +46,6 @@ package object dsl {
   }
 
   def field(index: Int, name: String)(f: => Unit)(implicit consumer: RecordConsumer): Unit = {
-    field(consumer, index, name)(f)
-  }
-
-  def field(index: Int, name: String, f: => Unit)(implicit consumer: RecordConsumer): Unit = {
-    field(consumer, index, name)(f)
-  }
-
-  def field(consumer: RecordConsumer, index: Int, name: String, f: => Unit): Unit = {
     field(consumer, index, name)(f)
   }
 

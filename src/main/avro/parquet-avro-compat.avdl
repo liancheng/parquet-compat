@@ -4,7 +4,7 @@ protocol ParquetAvroCompat {
     array<int> f;
   }
 
-  record AvroArrayOfOptionalInt {
+  record AvroArrayOfOptionalInts {
     array<union { null, int }> f;
   }
 
@@ -12,12 +12,12 @@ protocol ParquetAvroCompat {
     array<array<int>> f;
   }
 
-  record AvroNestedRecord {
+  record AvroParquet370Nested {
     union { null, int } c;
     union { null, int } d;
   }
 
-  record AvroSchemaMergingHelper {
-    AvroNestedRecord n;
+  record AvroParquet370 {
+    AvroParquet370Nested n;
   }
 }
