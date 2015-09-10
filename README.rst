@@ -80,23 +80,32 @@ This repository is only tested on Mac OS X 10.10.  To build this project, instal
 
 Then compile and run sample code with SBT::
 
-  $ ./build/sbt
-  ...
-  > ; clean; compile
-  ...
-  > run
-  ...
-  Multiple main classes detected, select one to run:
+  $ ./build/sbt clean compile test:compile
 
-  [1] com.databricks.parquet.AddressBook
-  [2] com.databricks.parquet.AddressBookWithoutImplicits
-  [3] com.databricks.parquet.interop.AvroToThrift
-  [4] com.databricks.parquet.interop.ProtoToAvro
-  [5] com.databricks.parquet.interop.ThriftToAvro
-  [6] com.databricks.parquet.schema.AvroArrayOfOptionalElement
-  [7] com.databricks.parquet.schema.PARQUET_364
-  [8] com.databricks.parquet.schema.ProtoArrayOfOptionalElement
+Run examples
+============
 
-  Enter number:
+::
+
+  $ ./build/sbt run
+
+Run tests
+=========
+
+Run all tests::
+
+  $ ./build/sbt test
+
+Run specified tests::
+
+  $ ./build/sbt test-only <test-suite-name-pattern> -- -t <test-case-name>
+
+or::
+
+  $ ./build/sbt test-only <test-suite-name-pattern> -- -z <test-case-name-pattern>
+
+For example, the following command runs all test cases whose name contains "Avro"::
+
+  $ ./build/sbt test-only "*Suite" -- -z "Avro"
 
 __ https://blog.twitter.com/2013/dremel-made-simple-with-parquet
