@@ -118,4 +118,23 @@ package object dsl {
   def double(consumer: RecordConsumer, value: Double): Unit = {
     consumer.addDouble(value)
   }
+
+  class DecimalConsumer(value: BigDecimal, consumer: RecordConsumer) {
+    def asInt(): Unit = {
+      consumer.addInteger(value.underlying().longValue().toInt)
+    }
+
+    def asLong(): Unit = {
+      consumer.addLong(value.underlying().longValue())
+    }
+
+    def asBinary(): Unit = {
+      val unscaledBytes = value.underlying().unscaledValue().toByteArray
+      consumer.addBinary(Binary.fromConstantByteArray(unscaledBytes))
+    }
+  }
+
+  def decimal(value: BigDecimal)(implicit consumer: RecordConsumer): DecimalConsumer = {
+    new DecimalConsumer(value, consumer)
+  }
 }
