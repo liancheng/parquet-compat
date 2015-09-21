@@ -20,4 +20,17 @@ protocol ParquetAvroCompat {
   record AvroParquet370 {
     AvroParquet370Nested n;
   }
+
+  record Nest1 {
+    int mpi;
+    int ts;
+  }
+
+  record Nest2 {
+    Nest1 nest1;
+  }
+
+  record Profile {
+    array<Nest2> nest2;
+  }
 }
