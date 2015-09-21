@@ -8,7 +8,7 @@ import org.apache.parquet.hadoop.ParquetWriter
 import org.apache.parquet.hadoop.api.WriteSupport
 import org.apache.parquet.hadoop.api.WriteSupport.WriteContext
 import org.apache.parquet.io.api.RecordConsumer
-import org.apache.parquet.schema.MessageType
+import org.apache.parquet.schema.{MessageType, MessageTypeParser}
 
 private[dsl] class DirectWriteSupport(schema: MessageType, metadata: Map[String, String])
   extends WriteSupport[RecordBuilder] {
@@ -30,11 +30,11 @@ private[dsl] class DirectWriteSupport(schema: MessageType, metadata: Map[String,
   }
 }
 
-private[dsl] object DirectParquetWriter {
+object DirectParquetWriter {
   class Builder(path: Path) extends ParquetWriter.Builder[RecordBuilder, Builder](path) {
     private var schema: MessageType = _
 
-    private var metadata: Map[String, String] = _
+    private var metadata: Map[String, String] = Map.empty[String, String]
 
     def withSchema(schema: MessageType): Builder = {
       this.schema = schema
@@ -46,6 +46,12 @@ private[dsl] object DirectParquetWriter {
       self()
     }
 
+    def withConf(pairs: (String, String)*): Builder = {
+      val conf = new Configuration
+      pairs.foreach { case (key, value) => conf.set(key, value) }
+      withConf(conf)
+    }
+
     override def getWriteSupport(conf: Configuration): WriteSupport[RecordBuilder] = {
       new DirectWriteSupport(schema, metadata)
     }
@@ -54,4 +60,7 @@ private[dsl] object DirectParquetWriter {
   }
 
   def builder(path: Path): Builder = new Builder(path)
+
+  def builder(path: Path, schema: String): Builder =
+    builder(path).withSchema(MessageTypeParser.parseMessageType(schema))
 }

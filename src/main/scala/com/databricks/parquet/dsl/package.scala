@@ -26,6 +26,12 @@ package object dsl {
       .withMetadata(metadata)
       .build()
 
+    writeDirect(parquetWriter)(f)
+  }
+
+  def writeDirect
+      (parquetWriter: ParquetWriter[RecordBuilder])
+      (f: ParquetWriter[RecordBuilder] => Unit): Unit = {
     try f(parquetWriter) finally parquetWriter.close()
   }
 
