@@ -27,4 +27,3 @@ private[dsl] class DirectWriteSupport(schema: MessageType, metadata: Map[String,
     this.recordConsumer = recordConsumer
   }
 }
-
