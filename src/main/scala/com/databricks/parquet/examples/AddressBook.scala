@@ -21,7 +21,7 @@ object AddressBook {
         |}
       """.stripMargin
 
-    import com.databricks.parquet.dsl._
+    import com.databricks.parquet.dsl.write._
 
     writeDirect(path, schema) { implicit writer =>
       message { implicit consumer =>
