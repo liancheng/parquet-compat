@@ -2,6 +2,7 @@ package com.databricks.parquet.schema
 
 import com.databricks.parquet.ParquetSuite
 import com.databricks.parquet.avro.{AvroParquet370, AvroParquet370Nested}
+import com.databricks.parquet.dsl.write._
 import org.apache.hadoop.conf.Configuration
 import org.apache.parquet.avro.{AvroParquetReader, AvroReadSupport}
 
@@ -16,8 +17,6 @@ class SchemaEvolutionSuite extends ParquetSuite {
           |  }
           |}
         """.stripMargin
-
-      import com.databricks.parquet.dsl._
 
       writeDirect(path.toString, schema) { implicit writer =>
         message { implicit consumer =>

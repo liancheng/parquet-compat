@@ -1,11 +1,11 @@
-package com.databricks.parquet
+package com.databricks.parquet.dsl
 
 import org.apache.hadoop.fs.Path
 import org.apache.parquet.hadoop.ParquetWriter
 import org.apache.parquet.io.api.{Binary, RecordConsumer}
 import org.apache.parquet.schema.MessageTypeParser
 
-package object dsl {
+package object write {
   type RecordBuilder = RecordConsumer => Unit
 
   def writeDirect(path: String, schema: String)(f: ParquetWriter[RecordBuilder] => Unit): Unit = {

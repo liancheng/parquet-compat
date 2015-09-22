@@ -4,6 +4,7 @@ import scala.collection.JavaConverters._
 
 import com.databricks.parquet.ParquetSuite
 import com.databricks.parquet.avro.AvroArrayOfOptionalInts
+import com.databricks.parquet.dsl.write._
 import org.apache.avro.generic.GenericRecord
 
 class ListCompatibilitySuite extends ParquetSuite {
@@ -18,8 +19,6 @@ class ListCompatibilitySuite extends ParquetSuite {
           |  }
           |}
         """.stripMargin
-
-      import com.databricks.parquet.dsl._
 
       writeDirect(path.toString, schema) { implicit writer =>
         message { implicit consumer =>
@@ -66,8 +65,6 @@ class ListCompatibilitySuite extends ParquetSuite {
           |  }
           |}
         """.stripMargin
-
-      import com.databricks.parquet.dsl._
 
       writeDirect(path.toString, schema) { implicit writer =>
         message { implicit consumer =>

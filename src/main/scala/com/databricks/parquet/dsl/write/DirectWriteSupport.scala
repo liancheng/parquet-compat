@@ -1,4 +1,4 @@
-package com.databricks.parquet.dsl
+package com.databricks.parquet.dsl.write
 
 import scala.collection.JavaConverters._
 
