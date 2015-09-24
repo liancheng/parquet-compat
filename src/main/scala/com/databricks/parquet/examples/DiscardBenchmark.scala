@@ -10,6 +10,6 @@ import com.databricks.parquet.utils
 object DiscardBenchmark {
   def main(args: Array[String]) {
     val inputPath = args.head
-    read.discard(inputPath, utils.schemaOf(inputPath).toString)
+    read.discard(inputPath, utils.schemaOf(inputPath))
   }
 }
