@@ -9,7 +9,7 @@ import com.databricks.parquet.utils._
 // This example shows the DSL API using implicits.
 object AddressBook {
   def main(args: Array[String]) {
-    val path = outputPath(args).toString
+    val path = outputPath(args)
     val schema =
       """message AddressBook {
         |  required binary owner (UTF8);
@@ -21,9 +21,11 @@ object AddressBook {
         |}
       """.stripMargin
 
-    import com.databricks.parquet.dsl.write._
+    import com.databricks.parquet.dsl.{read, write}
 
-    writeDirect(path, schema) { implicit writer =>
+    write.directly(path, schema) { implicit writer =>
+      import write._
+
       message { implicit consumer =>
         field(0, "owner") {
           string("Julien Le Dem")
@@ -54,6 +56,45 @@ object AddressBook {
       }
 
       message { implicit consumer =>
+        field(0, "owner") {
+          string("A. Nonymous")
+        }
+      }
+    }
+
+    read.directly(path, schema) { implicit writer =>
+      import read._
+
+      message {
+        field(0, "owner") {
+          string("Julien Le Dem")
+        }
+
+        field(1, "ownerPhoneNumbers") {
+          string("555 123 4567")
+          string("555 666 1337")
+        }
+
+        field(2, "contacts") {
+          group {
+            field(0, "name") {
+              string("Dmitriy Ryaboy")
+            }
+
+            field(1, "phoneNumber") {
+              string("555 987 6543")
+            }
+          }
+
+          group {
+            field(0, "name") {
+              string("Chris Aniszczyk")
+            }
+          }
+        }
+      }
+
+      message {
         field(0, "owner") {
           string("A. Nonymous")
         }

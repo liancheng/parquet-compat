@@ -5,6 +5,9 @@ import com.databricks.parquet.avro.{AvroParquet370, AvroParquet370Nested}
 import com.databricks.parquet.dsl.write._
 import org.apache.hadoop.conf.Configuration
 import org.apache.parquet.avro.{AvroParquetReader, AvroReadSupport}
+import org.apache.parquet.schema.Types
+import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
+import org.apache.parquet.schema.OriginalType._
 
 class SchemaEvolutionSuite extends ParquetSuite {
   test("PARQUET-370: Nested records are not properly read if none of their fields are requested") {
@@ -18,7 +21,7 @@ class SchemaEvolutionSuite extends ParquetSuite {
           |}
         """.stripMargin
 
-      writeDirect(path.toString, schema) { implicit writer =>
+      directly(path, schema) { implicit writer =>
         message { implicit consumer =>
           field(0, "n") {
             group {
@@ -57,5 +60,20 @@ class SchemaEvolutionSuite extends ParquetSuite {
         }
       }
     }
+  }
+
+  test("merge primitive types") {
+    val expected =
+      Types.buildMessage()
+        .addField(
+          Types
+            .required(INT32)
+            .as(DECIMAL)
+            .precision(9)
+            .scale(0)
+            .named("f"))
+        .named("root")
+
+    assert(expected.union(expected) === expected)
   }
 }

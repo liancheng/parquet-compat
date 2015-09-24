@@ -6,7 +6,7 @@ import scala.collection.JavaConverters._
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
-import org.apache.parquet.hadoop.ParquetFileReader
+import org.apache.parquet.hadoop.{ParquetInputFormat, ParquetFileReader}
 import org.apache.parquet.schema.MessageType
 
 package object utils {
@@ -20,15 +20,14 @@ package object utils {
     new Path(path.toFile.getCanonicalPath)
   }
 
-  def readParquetSchema(path: String): MessageType = {
-    readParquetSchema(new Path(path))
+  def schemaOf(path: String): MessageType = {
+    schemaOf(new Path(path))
   }
 
-  def readParquetSchema(path: Path): MessageType = {
+  def schemaOf(path: Path): MessageType = {
     val configuration = new Configuration
     val fs = path.getFileSystem(configuration)
-    val parquetFiles = fs.listStatus(path).toSeq.asJava
-    val footers = ParquetFileReader.readAllFootersInParallel(configuration, parquetFiles, true)
-    footers.asScala.head.getParquetMetadata.getFileMetaData.getSchema
+    val footers = ParquetFileReader.readAllFootersInParallel(configuration, fs.getFileStatus(path))
+    footers.asScala.map(_.getParquetMetadata.getFileMetaData.getSchema).reduce(_ union _)
   }
 }

@@ -26,9 +26,11 @@ This repository is a playground for investigating various Parquet compatibility/
         |}
       """.stripMargin
 
-    import com.databricks.parquet.dsl._
+    import com.databricks.parquet.dsl.write
 
-    writeDirect("/tmp/parquet/blog-sample.parquet", schema) { implicit writer =>
+    write.directly("/tmp/parquet/blog-sample.parquet", schema) { implicit writer =>
+      import write._
+
       message { implicit consumer =>
         field(0, "owner") {
           string("Julien Le Dem")

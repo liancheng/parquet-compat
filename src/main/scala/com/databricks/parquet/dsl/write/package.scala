@@ -7,23 +7,15 @@ import org.apache.parquet.io.api.{Binary, RecordConsumer}
 package object write {
   type RecordBuilder = RecordConsumer => Unit
 
-  def writeDirect(path: String, schema: String)(f: ParquetWriter[RecordBuilder] => Unit): Unit = {
-    writeDirect(new Path(path), schema, Map.empty[String, String])(f)
+  def directly(path: String, schema: String)(f: ParquetWriter[RecordBuilder] => Unit): Unit = {
+    directly(new Path(path), schema)(f)
   }
 
-  def writeDirect
-      (path: String, schema: String, metadata: Map[String, String])
-      (f: ParquetWriter[RecordBuilder] => Unit): Unit = {
-    writeDirect(new Path(path), schema, metadata)(f)
+  def directly(path: Path, schema: String)(f: ParquetWriter[RecordBuilder] => Unit): Unit = {
+    directly(DirectParquetWriter.builder(path, schema).build())(f)
   }
 
-  def writeDirect
-      (path: Path, schema: String, metadata: Map[String, String])
-      (f: ParquetWriter[RecordBuilder] => Unit): Unit = {
-    writeDirect(DirectParquetWriter.builder(path, schema).build())(f)
-  }
-
-  def writeDirect
+  def directly
       (parquetWriter: ParquetWriter[RecordBuilder])
       (f: => ParquetWriter[RecordBuilder] => Unit): Unit = {
     try f(parquetWriter) finally parquetWriter.close()
