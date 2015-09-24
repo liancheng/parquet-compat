@@ -40,6 +40,10 @@ package object read {
     }
   }
 
+  private[read] class DiscardingMessageEvents extends MessageEvents {
+    override def issue(event: MessageEvent): Unit = ()
+  }
+
   def directly(parquetReader: ParquetReader[MessageEvents])(f: MessageEvents => Unit): Unit = {
     try {
       val events = parquetReader.read()

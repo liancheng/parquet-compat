@@ -8,13 +8,7 @@ import org.apache.parquet.schema.{GroupType, MessageType, Type}
 private[read] class DirectRecordMaterializer(schema: MessageType, discard: Boolean = false)
   extends RecordMaterializer[MessageEvents] {
 
-  private val events = if (discard) {
-    new MessageEvents {
-      override def issue(event: MessageEvent): Unit = ()
-    }
-  } else {
-    new MessageEvents
-  }
+  private val events = if (discard) new DiscardingMessageEvents else new MessageEvents
 
   override def getRootConverter: GroupConverter = new DirectGroupConverter(schema, events)
 
