@@ -10,7 +10,7 @@ import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
 import org.apache.parquet.schema.OriginalType._
 
 class SchemaEvolutionSuite extends ParquetSuite {
-  test("PARQUET-370: Nested records are not properly read if none of their fields are requested") {
+  test("PARQUET-370: nested records are not properly read if none of their fields are requested") {
     withTempHadoopPath { path =>
       val schema =
         """message root {
@@ -62,7 +62,7 @@ class SchemaEvolutionSuite extends ParquetSuite {
     }
   }
 
-  test("merge primitive types") {
+  test("PARQUET-379: merge primitive types") {
     val expected =
       Types.buildMessage()
         .addField(
