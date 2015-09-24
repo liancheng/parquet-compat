@@ -6,7 +6,7 @@ import com.databricks.parquet.utils
 import org.apache.hadoop.fs.Path
 import org.apache.parquet.hadoop.ParquetReader
 import org.apache.parquet.io.api.Binary
-import org.apache.parquet.schema.MessageTypeParser
+import org.apache.parquet.schema.{MessageType, MessageTypeParser}
 
 package object read {
   private[read] trait MessageEvent
@@ -54,37 +54,45 @@ package object read {
     directly(new Path(path))(f)
   }
 
+  def directly(path: Path)(f: MessageEvents => Unit): Unit = {
+    directly(path, utils.schemaOf(path))(f)
+  }
+
   def directly(path: String, requestedSchema: String)(f: MessageEvents => Unit): Unit = {
     directly(new Path(path), requestedSchema)(f)
   }
 
-  def directly(path: Path)(f: MessageEvents => Unit): Unit = {
-    val parquetSchema = utils.schemaOf(path)
-    directly(ParquetReader.builder(new DirectReadSupport(parquetSchema), path).build())(f)
+  def directly(path: Path, requestedSchema: String)(f: MessageEvents => Unit): Unit = {
+    directly(path, MessageTypeParser.parseMessageType(requestedSchema))(f)
   }
 
-  def directly(path: Path, requestedSchema: String)(f: MessageEvents => Unit): Unit = {
-    val parquetSchema = MessageTypeParser.parseMessageType(requestedSchema)
-    directly(ParquetReader.builder(new DirectReadSupport(parquetSchema), path).build())(f)
+  def directly(path: String, requestedSchema: MessageType)(f: MessageEvents => Unit): Unit = {
+    directly(new Path(path), requestedSchema)(f)
+  }
+
+  def directly(path: Path, requestedSchema: MessageType)(f: MessageEvents => Unit): Unit = {
+    directly(ParquetReader.builder(new DirectReadSupport(requestedSchema), path).build())(f)
   }
 
   def discard(path: String): Unit = discard(new Path(path))
+
+  def discard(path: Path): Unit = discard(path, utils.schemaOf(path))
 
   def discard(path: String, requestedSchema: String): Unit = {
     discard(new Path(path), requestedSchema)
   }
 
-  def discard(path: Path): Unit = {
-    val parquetSchema = utils.schemaOf(path)
-    val parquetReader = ParquetReader
-      .builder(new DirectReadSupport(parquetSchema, discard = true), path).build()
-    directly(parquetReader) { events => }
+  def discard(path: String, requestedSchema: MessageType): Unit = {
+    discard(new Path(path), requestedSchema)
   }
 
   def discard(path: Path, requestedSchema: String): Unit = {
-    val parquetSchema = MessageTypeParser.parseMessageType(requestedSchema)
-    val parquetReader = ParquetReader
-      .builder(new DirectReadSupport(parquetSchema, discard = true), path).build()
+    discard(path, MessageTypeParser.parseMessageType(requestedSchema))
+  }
+
+  def discard(path: Path, requestedSchema: MessageType): Unit = {
+    val readSupport = new DirectReadSupport(requestedSchema, discard = true)
+    val parquetReader = ParquetReader.builder(readSupport, path).build()
     directly(parquetReader) { events => }
   }
 
