@@ -8,9 +8,15 @@ import org.apache.parquet.schema.{GroupType, MessageType, Type}
 private[read] class DirectRecordMaterializer(schema: MessageType, discard: Boolean = false)
   extends RecordMaterializer[MessageEvents] {
 
-  private val events = if (discard) new DiscardingMessageEvents else new MessageEvents
+  private val events = new MessageEvents
 
-  override def getRootConverter: GroupConverter = new DirectGroupConverter(schema, events)
+  override def getRootConverter: GroupConverter = {
+    if (discard) {
+      new DiscardingGroupConverter(schema)
+    } else {
+      new DirectGroupConverter(schema, events)
+    }
+  }
 
   override def getCurrentRecord: MessageEvents = events
 }
@@ -40,6 +46,33 @@ private[read] class DirectGroupConverter(schema: GroupType, events: MessageEvent
       new DirectPrimitiveConverter(events)
     } else {
       new DirectGroupConverter(fieldType.asGroupType(), events)
+    }
+  }
+}
+
+private[read] class DiscardingPrimitiveConverter extends PrimitiveConverter {
+  override def addBoolean(value: Boolean): Unit = ()
+  override def addInt(value: Int): Unit = ()
+  override def addLong(value: Long): Unit = ()
+  override def addFloat(value: Float): Unit = ()
+  override def addDouble(value: Double): Unit = ()
+  override def addBinary(value: Binary): Unit = ()
+}
+
+private[read] class DiscardingGroupConverter(schema: GroupType) extends GroupConverter {
+  private val converters = schema.getFields.asScala.map(newConverter)
+
+  override def getConverter(i: Int): Converter = converters(i)
+
+  override def start(): Unit = ()
+
+  override def end(): Unit = ()
+
+  private def newConverter(fieldType: Type): Converter = {
+    if (fieldType.isPrimitive) {
+      new DiscardingPrimitiveConverter
+    } else {
+      new DiscardingGroupConverter(fieldType.asGroupType())
     }
   }
 }
