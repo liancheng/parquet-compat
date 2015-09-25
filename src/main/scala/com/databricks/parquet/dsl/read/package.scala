@@ -96,6 +96,10 @@ package object read {
     directly(parquetReader) { events => }
   }
 
+  def nothing()(implicit events: MessageEvents): Unit = {
+    assert(events.eq(null))
+  }
+
   def message(f: => Unit)(implicit events: MessageEvents): Unit = {
     events.expect(GroupStart)
     f
