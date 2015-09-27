@@ -25,6 +25,7 @@ object Build extends sbt.Build {
   lazy val dependencySettings =
     graphSettings ++ Seq(
       retrieveManaged := true,
+      resolvers += Resolver.sonatypeRepo("public"),
       libraryDependencies ++= Dependencies.all ++ Dependencies.test,
       // Disables auto conflict resolution
       conflictManager := ConflictManager.strict,
@@ -76,6 +77,7 @@ object Dependencies {
     val scala = "2.10.4"
     val scalaMeter = "0.7"
     val scalaTest = "2.2.5"
+    val scopt = "3.3.0"
     val slf4j = "1.6.4"
     val snappy = "1.1.1.6"
     val thrift = "0.9.2"
@@ -127,6 +129,9 @@ object Dependencies {
   val scalaTest = Seq(
     "org.scalatest" %% "scalatest" % Versions.scalaTest % "test")
 
+  val scopt = Seq(
+    "com.github.scopt" %% "scopt" % Versions.scopt)
+
   val slf4j = Seq(
     "org.slf4j" % "slf4j-api" % Versions.slf4j,
     "org.slf4j" % "slf4j-log4j12" % Versions.slf4j,
@@ -138,7 +143,7 @@ object Dependencies {
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % Versions.thrift)
 
-  val all = hadoop ++ log4j ++ parquetMr ++ slf4j ++ thrift
+  val all = hadoop ++ log4j ++ parquetMr ++ scalaMeter ++ scopt ++ slf4j ++ thrift
 
   val test = scalaMeter ++ scalaTest
 

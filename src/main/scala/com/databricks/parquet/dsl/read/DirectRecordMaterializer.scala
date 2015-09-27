@@ -12,7 +12,7 @@ private[read] class DirectRecordMaterializer(schema: MessageType, discard: Boole
 
   override def getRootConverter: GroupConverter = {
     if (discard) {
-      new DiscardingGroupConverter(schema)
+      new BlackholeGroupConverter(schema)
     } else {
       new DirectGroupConverter(schema, events)
     }
@@ -59,7 +59,7 @@ private[read] class DiscardingPrimitiveConverter extends PrimitiveConverter {
   override def addBinary(value: Binary): Unit = ()
 }
 
-private[read] class DiscardingGroupConverter(schema: GroupType) extends GroupConverter {
+private[read] class BlackholeGroupConverter(schema: GroupType) extends GroupConverter {
   private val converters = schema.getFields.asScala.map(newConverter)
 
   override def getConverter(i: Int): Converter = converters(i)
@@ -72,7 +72,7 @@ private[read] class DiscardingGroupConverter(schema: GroupType) extends GroupCon
     if (fieldType.isPrimitive) {
       new DiscardingPrimitiveConverter
     } else {
-      new DiscardingGroupConverter(fieldType.asGroupType())
+      new BlackholeGroupConverter(fieldType.asGroupType())
     }
   }
 }
