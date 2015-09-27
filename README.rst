@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/liancheng/parquet-compat.svg
+    :target: https://travis-ci.org/liancheng/parquet-compat
+
 Overview
 ========
 
