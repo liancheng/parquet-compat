@@ -25,7 +25,9 @@ object Build extends sbt.Build {
   lazy val dependencySettings =
     graphSettings ++ Seq(
       retrieveManaged := true,
-      resolvers += Resolver.sonatypeRepo("public"),
+      resolvers ++= Seq(
+        Resolver.sonatypeRepo("public"),
+        "Twitter Maven" at "http://maven.twttr.com"),
       libraryDependencies ++= Dependencies.all ++ Dependencies.test,
       // Disables auto conflict resolution
       conflictManager := ConflictManager.strict,
