@@ -25,7 +25,8 @@ object Build extends sbt.Build {
   lazy val dependencySettings =
     graphSettings ++ Seq(
       retrieveManaged := true,
-      libraryDependencies ++= Dependencies.all,
+      resolvers += Resolver.sonatypeRepo("public"),
+      libraryDependencies ++= Dependencies.all ++ Dependencies.test,
       // Disables auto conflict resolution
       conflictManager := ConflictManager.strict,
       // Explicitly overrides all conflicting transitive dependencies
@@ -71,9 +72,12 @@ object Dependencies {
     val log4j = "1.2.16"
     val parquetFormat = "2.3.0-incubating"
     val parquetMr = "1.8.1"
+    val paranamer = "2.6"
     val protobuf = "2.5.0"
     val scala = "2.10.4"
+    val scalaMeter = "0.7"
     val scalaTest = "2.2.5"
+    val scopt = "3.3.0"
     val slf4j = "1.6.4"
     val snappy = "1.1.1.6"
     val thrift = "0.9.2"
@@ -103,6 +107,9 @@ object Dependencies {
   val parquetFormat = Seq(
     "org.apache.parquet" % "parquet-format" % Versions.parquetFormat)
 
+  val paranamer = Seq(
+    "com.thoughtworks.paranamer" % "paranamer" % "2.6")
+
   val parquetMr = Seq(
     "org.apache.parquet" % "parquet-avro" % Versions.parquetMr,
     "org.apache.parquet" % "parquet-thrift" % Versions.parquetMr,
@@ -113,10 +120,18 @@ object Dependencies {
     "com.google.protobuf" % "protobuf-java" % Versions.protobuf)
 
   val scala = Seq(
-    "org.scala-lang" % "scala-library" % Versions.scala)
+    "org.scala-lang" % "scala-library" % Versions.scala,
+    "org.scala-lang" % "scala-reflect" % Versions.scala)
+
+  val scalaMeter = Seq(
+    "com.storm-enroute" %% "scalameter" % Versions.scalaMeter)
+
 
   val scalaTest = Seq(
     "org.scalatest" %% "scalatest" % Versions.scalaTest % "test")
+
+  val scopt = Seq(
+    "com.github.scopt" %% "scopt" % Versions.scopt)
 
   val slf4j = Seq(
     "org.slf4j" % "slf4j-api" % Versions.slf4j,
@@ -129,9 +144,11 @@ object Dependencies {
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % Versions.thrift)
 
-  val all = hadoop ++ log4j ++ parquetMr ++ scalaTest ++ slf4j ++ thrift
+  val all = hadoop ++ log4j ++ parquetMr ++ scalaMeter ++ scopt ++ slf4j ++ thrift
+
+  val test = scalaMeter ++ scalaTest
 
   val overrides = Set.empty ++
-    avro ++ commons ++ elephantBird ++ jackson ++ parquetFormat ++
+    avro ++ commons ++ elephantBird ++ jackson ++ paranamer ++ parquetFormat ++
     protobuf ++ scala ++ snappy ++ thrift ++ slf4j
 }

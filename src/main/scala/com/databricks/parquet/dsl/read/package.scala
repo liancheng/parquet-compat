@@ -74,23 +74,23 @@ package object read {
     directly(ParquetReader.builder(new DirectReadSupport(requestedSchema), path).build())(f)
   }
 
-  def discard(path: String): Unit = discard(new Path(path))
+  def blackhole(path: String): Unit = blackhole(new Path(path))
 
-  def discard(path: Path): Unit = discard(path, utils.schemaOf(path))
+  def blackhole(path: Path): Unit = blackhole(path, utils.schemaOf(path))
 
-  def discard(path: String, requestedSchema: String): Unit = {
-    discard(new Path(path), requestedSchema)
+  def blackhole(path: String, requestedSchema: String): Unit = {
+    blackhole(new Path(path), requestedSchema)
   }
 
-  def discard(path: String, requestedSchema: MessageType): Unit = {
-    discard(new Path(path), requestedSchema)
+  def blackhole(path: String, requestedSchema: MessageType): Unit = {
+    blackhole(new Path(path), requestedSchema)
   }
 
-  def discard(path: Path, requestedSchema: String): Unit = {
-    discard(path, MessageTypeParser.parseMessageType(requestedSchema))
+  def blackhole(path: Path, requestedSchema: String): Unit = {
+    blackhole(path, MessageTypeParser.parseMessageType(requestedSchema))
   }
 
-  def discard(path: Path, requestedSchema: MessageType): Unit = {
+  def blackhole(path: Path, requestedSchema: MessageType): Unit = {
     val readSupport = new DirectReadSupport(requestedSchema, discard = true)
     val parquetReader = ParquetReader.builder(readSupport, path).build()
     directly(parquetReader) { events => }

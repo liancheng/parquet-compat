@@ -100,7 +100,7 @@ class DslSuite extends ParquetSuite {
         }
       }
 
-      read.discard(path)
+      read.blackhole(path)
     }
   }
 
