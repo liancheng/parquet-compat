@@ -2,6 +2,7 @@ package com.databricks.parquet.examples
 
 import com.databricks.parquet.dsl.read
 import com.databricks.parquet.utils
+import org.scalameter.measure
 
 /**
  * Reading a Parquet file with an empty data model that just discards everything.  Used to profile
@@ -10,6 +11,8 @@ import com.databricks.parquet.utils
 object DiscardBenchmark {
   def main(args: Array[String]) {
     val inputPath = args.head
-    read.discard(inputPath, utils.schemaOf(inputPath))
+    val schema = utils.schemaOf(inputPath)
+    val time = measure { read.discard(inputPath, schema) }
+    println(s"Total time: $time")
   }
 }

@@ -25,7 +25,7 @@ object Build extends sbt.Build {
   lazy val dependencySettings =
     graphSettings ++ Seq(
       retrieveManaged := true,
-      libraryDependencies ++= Dependencies.all,
+      libraryDependencies ++= Dependencies.all ++ Dependencies.test,
       // Disables auto conflict resolution
       conflictManager := ConflictManager.strict,
       // Explicitly overrides all conflicting transitive dependencies
@@ -70,9 +70,11 @@ object Dependencies {
     val jackson = "1.9.13"
     val log4j = "1.2.16"
     val parquetFormat = "2.3.0-incubating"
+    val paranamer = "2.6"
     val parquetMr = "1.7.0"
     val protobuf = "2.5.0"
     val scala = "2.10.4"
+    val scalaMeter = "0.7"
     val scalaTest = "2.2.5"
     val slf4j = "1.6.4"
     val snappy = "1.1.1.6"
@@ -103,6 +105,9 @@ object Dependencies {
   val parquetFormat = Seq(
     "org.apache.parquet" % "parquet-format" % Versions.parquetFormat)
 
+  val paranamer = Seq(
+    "com.thoughtworks.paranamer" % "paranamer" % "2.6")
+
   val parquetMr = Seq(
     "org.apache.parquet" % "parquet-avro" % Versions.parquetMr,
     "org.apache.parquet" % "parquet-thrift" % Versions.parquetMr,
@@ -113,7 +118,11 @@ object Dependencies {
     "com.google.protobuf" % "protobuf-java" % Versions.protobuf)
 
   val scala = Seq(
-    "org.scala-lang" % "scala-library" % Versions.scala)
+    "org.scala-lang" % "scala-library" % Versions.scala,
+    "org.scala-lang" % "scala-reflect" % Versions.scala)
+
+  val scalaMeter = Seq(
+    "com.storm-enroute" %% "scalameter" % Versions.scalaMeter)
 
   val scalaTest = Seq(
     "org.scalatest" %% "scalatest" % Versions.scalaTest % "test")
@@ -129,9 +138,11 @@ object Dependencies {
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % Versions.thrift)
 
-  val all = hadoop ++ log4j ++ parquetMr ++ scalaTest ++ slf4j ++ thrift
+  val all = hadoop ++ log4j ++ parquetMr ++ slf4j ++ thrift
+
+  val test = scalaMeter ++ scalaTest
 
   val overrides = Set.empty ++
-    avro ++ commons ++ elephantBird ++ jackson ++ parquetFormat ++
+    avro ++ commons ++ elephantBird ++ jackson ++ paranamer ++ parquetFormat ++
     protobuf ++ scala ++ snappy ++ thrift ++ slf4j
 }
