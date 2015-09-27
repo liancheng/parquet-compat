@@ -46,12 +46,14 @@ class ListCompatibilitySuite extends ParquetSuite {
         }
       }
 
-      withAvroParquetReader[GenericRecord](path) { reader =>
-        val expected = Seq(
-          Seq(0: Integer, 1: Integer).asJava,
-          Seq(2: Integer, 3: Integer).asJava).asJava
+      expectException[ClassCastException] {
+        withAvroParquetReader[GenericRecord](path) { reader =>
+          val expected = Seq(
+            Seq(0: Integer, 1: Integer).asJava,
+            Seq(2: Integer, 3: Integer).asJava).asJava
 
-        assert(reader.read().get("f") === expected)
+          assert(reader.read().get("f") === expected)
+        }
       }
     }
   }
@@ -94,22 +96,26 @@ class ListCompatibilitySuite extends ParquetSuite {
         }
       }
 
-      withAvroParquetReader[GenericRecord](path) { reader =>
-        val expected = Seq(
-          Seq(0: Integer, 1: Integer).asJava,
-          Seq(2: Integer, 3: Integer).asJava).asJava
+      expectException[ClassCastException] {
+        withAvroParquetReader[GenericRecord](path) { reader =>
+          val expected = Seq(
+            Seq(0: Integer, 1: Integer).asJava,
+            Seq(2: Integer, 3: Integer).asJava).asJava
 
-        assert(reader.read().get("f") === expected)
+          assert(reader.read().get("f") === expected)
+        }
       }
     }
   }
 
   test("write an Avro array of optional integers") {
     withTempHadoopPath { path =>
-      withAvroParquetWriter[AvroArrayOfOptionalInts](
-        path, AvroArrayOfOptionalInts.getClassSchema) { writer =>
+      val schema = AvroArrayOfOptionalInts.getClassSchema
+      withAvroParquetWriter[AvroArrayOfOptionalInts](path, schema) { writer =>
         val arrayOfOptionalInts = Seq(1: Integer, null, 2: Integer, null).asJava
-        writer.write(AvroArrayOfOptionalInts.newBuilder().setF(arrayOfOptionalInts).build())
+        expectException[NullPointerException] {
+          writer.write(AvroArrayOfOptionalInts.newBuilder().setF(arrayOfOptionalInts).build())
+        }
       }
     }
   }

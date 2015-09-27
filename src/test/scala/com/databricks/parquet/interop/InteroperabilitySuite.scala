@@ -31,8 +31,10 @@ class InteroperabilitySuite extends ParquetSuite {
         _.write(AvroIntArray.newBuilder().setF(intArray).build())
       }
 
-      withThriftParquetReader[ThriftIntArray](path) { reader =>
-        assert(intArray === reader.read().getF)
+      expectException[RuntimeException] {
+        withThriftParquetReader[ThriftIntArray](path) { reader =>
+          assert(intArray === reader.read().getF)
+        }
       }
     }
   }
@@ -45,8 +47,10 @@ class InteroperabilitySuite extends ParquetSuite {
         _.write(ProtoIntArray.newBuilder().addAllF(intArray).build())
       }
 
-      withAvroParquetReader[GenericRecord](path) { reader =>
-        assert(intArray === reader.read())
+      expectException[UnsupportedOperationException] {
+        withAvroParquetReader[GenericRecord](path) { reader =>
+          assert(intArray === reader.read())
+        }
       }
     }
   }

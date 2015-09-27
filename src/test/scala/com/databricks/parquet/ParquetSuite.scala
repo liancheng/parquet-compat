@@ -1,6 +1,6 @@
 package com.databricks.parquet
 
-import java.io.File
+import java.io._
 import java.nio.file.Files
 import java.util.logging.{Logger => JulLogger}
 
@@ -85,5 +85,13 @@ abstract class ParquetSuite extends FunSuite {
       (path: Path)
       (f: ParquetReader[T] => Unit): Unit = {
     withParquetReader[T](AvroParquetReader.builder[T](path).build())(f)
+  }
+
+  protected def expectException[T <: Throwable: Manifest](f: => Any): Unit = {
+    val cause = intercept[T](f)
+    val bytesStream = new ByteArrayOutputStream()
+    val printStream = new PrintStream(bytesStream)
+    cause.printStackTrace(printStream)
+    info(s"Expected exception intercepted: $cause")
   }
 }
