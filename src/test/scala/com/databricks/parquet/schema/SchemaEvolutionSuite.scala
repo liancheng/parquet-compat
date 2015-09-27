@@ -8,6 +8,7 @@ import org.apache.parquet.avro.{AvroParquetReader, AvroReadSupport}
 import org.apache.parquet.schema.Types
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
 import org.apache.parquet.schema.OriginalType._
+import org.scalatest.exceptions.TestFailedException
 
 class SchemaEvolutionSuite extends ParquetSuite {
   test("PARQUET-370: nested records are not properly read if none of their fields are requested") {
@@ -49,14 +50,8 @@ class SchemaEvolutionSuite extends ParquetSuite {
                 .build())
             .build()
 
-        try {
-          assert(actual === expected)
-        } catch { case cause: Throwable =>
-          fail(
-            s"""Expected: $expected
-               |Actual:   $actual
-             """.stripMargin,
-            cause)
+        expectException[TestFailedException] {
+          assert(actual.toString === expected.toString)
         }
       }
     }
@@ -74,6 +69,8 @@ class SchemaEvolutionSuite extends ParquetSuite {
             .named("f"))
         .named("root")
 
-    assert(expected.union(expected) === expected)
+    expectException[TestFailedException] {
+      assert(expected.union(expected) === expected)
+    }
   }
 }
