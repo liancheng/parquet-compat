@@ -27,6 +27,7 @@ object Build extends sbt.Build {
       retrieveManaged := true,
       resolvers ++= Seq(
         Resolver.sonatypeRepo("public"),
+        "Local Maven" at "file:///" + Path.userHome.absolutePath + "/.m2/repository",
         "Twitter Maven" at "http://maven.twttr.com"),
       libraryDependencies ++= Dependencies.all ++ Dependencies.test,
       // Disables auto conflict resolution
@@ -73,7 +74,7 @@ object Dependencies {
     val jackson = "1.9.13"
     val log4j = "1.2.16"
     val parquetFormat = "2.3.0-incubating"
-    val parquetMr = "1.8.1"
+    val parquetMr = "1.8.2-SNAPSHOT"
     val paranamer = "2.6"
     val protobuf = "2.5.0"
     val scala = "2.10.4"
