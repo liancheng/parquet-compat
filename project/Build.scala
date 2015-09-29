@@ -26,6 +26,7 @@ object Build extends sbt.Build {
     graphSettings ++ Seq(
       retrieveManaged := true,
       resolvers ++= Seq(
+        Resolver.mavenLocal,
         Resolver.sonatypeRepo("public"),
         "Twitter Maven" at "http://maven.twttr.com"),
       libraryDependencies ++= Dependencies.all ++ Dependencies.test,
