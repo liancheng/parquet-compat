@@ -25,10 +25,7 @@ object Build extends sbt.Build {
   lazy val dependencySettings =
     graphSettings ++ Seq(
       retrieveManaged := true,
-      resolvers ++= Seq(
-        Resolver.mavenLocal,
-        Resolver.sonatypeRepo("public"),
-        "Twitter Maven" at "http://maven.twttr.com"),
+      resolvers ++= Dependencies.extraResolvers,
       libraryDependencies ++= Dependencies.all ++ Dependencies.test,
       // Disables auto conflict resolution
       conflictManager := ConflictManager.strict,
@@ -85,6 +82,11 @@ object Dependencies {
     val snappy = "1.1.1.6"
     val thrift = "0.9.2"
   }
+
+  val extraResolvers = Seq(
+    Resolver.mavenLocal,
+    Resolver.sonatypeRepo("public"),
+    "Twitter Maven" at "http://maven.twttr.com")
 
   val avro = Seq(
     "org.apache.avro" % "avro" % Versions.avro)
