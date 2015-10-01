@@ -50,7 +50,7 @@ private[read] class DirectGroupConverter(schema: GroupType, events: MessageEvent
   }
 }
 
-private[read] class DiscardingPrimitiveConverter extends PrimitiveConverter {
+private[read] class BlackholePrimitiveConverter extends PrimitiveConverter {
   override def addBoolean(value: Boolean): Unit = ()
   override def addInt(value: Int): Unit = ()
   override def addLong(value: Long): Unit = ()
@@ -70,7 +70,7 @@ private[read] class BlackholeGroupConverter(schema: GroupType) extends GroupConv
 
   private def newConverter(fieldType: Type): Converter = {
     if (fieldType.isPrimitive) {
-      new DiscardingPrimitiveConverter
+      new BlackholePrimitiveConverter
     } else {
       new BlackholeGroupConverter(fieldType.asGroupType())
     }
