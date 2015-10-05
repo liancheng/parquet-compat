@@ -1,5 +1,6 @@
 import com.github.bigtoast.sbtthrift.{ThriftPlugin => Thrift}
 import net.virtualvoid.sbt.graph.Plugin.graphSettings
+import pl.project13.scala.sbt.JmhPlugin
 import sbt.Keys._
 import sbt._
 import sbtavro.{SbtAvro => Avro}
@@ -13,6 +14,7 @@ object Build extends sbt.Build {
       .settings(thriftSettings: _*)
       .settings(protobufSettings: _*)
       .settings(dependencySettings: _*)
+      .enablePlugins(JmhPlugin)
 
   lazy val basicSettings =
     Seq(
@@ -20,13 +22,14 @@ object Build extends sbt.Build {
       version := "0.1.0-SNAPSHOT",
       scalaVersion := Dependencies.Versions.scala,
       scalacOptions ++= Seq("-unchecked", "-deprecation"),
-      javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-g"))
+      javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-g"),
+      fork := true)
 
   lazy val dependencySettings =
     graphSettings ++ Seq(
       retrieveManaged := true,
       resolvers ++= Dependencies.extraResolvers,
-      libraryDependencies ++= Dependencies.all ++ Dependencies.test,
+      libraryDependencies ++= Dependencies.all,
       // Disables auto conflict resolution
       conflictManager := ConflictManager.strict,
       // Explicitly overrides all conflicting transitive dependencies
@@ -62,6 +65,7 @@ object Build extends sbt.Build {
 
 object Dependencies {
   object Versions {
+    val asm = "5.0.4"
     val avro = "1.7.7"
     val commonsCodec = "1.6"
     val commonsLang = "2.6"
@@ -87,6 +91,9 @@ object Dependencies {
     Resolver.mavenLocal,
     Resolver.sonatypeRepo("public"),
     "Twitter Maven" at "http://maven.twttr.com")
+
+  val asm = Seq(
+    "org.ow2.asm" % "asm" % Versions.asm)
 
   val avro = Seq(
     "org.apache.avro" % "avro" % Versions.avro)
@@ -149,11 +156,11 @@ object Dependencies {
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % Versions.thrift)
 
-  val all = hadoop ++ log4j ++ parquetMr ++ scalaMeter ++ scopt ++ slf4j ++ thrift
-
   val test = scalaMeter ++ scalaTest
 
+  val all = test ++ hadoop ++ log4j ++ parquetMr ++ scalaMeter ++ scopt ++ slf4j ++ thrift
+
   val overrides = Set.empty ++
-    avro ++ commons ++ elephantBird ++ jackson ++ paranamer ++ parquetFormat ++
+    asm ++ avro ++ commons ++ elephantBird ++ jackson ++ paranamer ++ parquetFormat ++
     protobuf ++ scala ++ snappy ++ thrift ++ slf4j
 }
