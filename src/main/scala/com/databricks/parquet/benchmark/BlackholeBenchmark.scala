@@ -1,4 +1,4 @@
-package com.databricks.parquet.examples
+package com.databricks.parquet.benchmark
 
 import java.util.concurrent.TimeUnit
 
@@ -16,7 +16,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder
  * {{{
  *   $ ./build/sbt
  *   > set javaOptions += "-Dbenchmark.input-file='path/to/parquet/file'"
- *   > jmh:runMain com.databricks.parquet.examples.BlackholeBenchmark
+ *   > jmh:runMain com.databricks.parquet.benchmark.BlackholeBenchmark
  * }}}
  */
 @State(Scope.Benchmark)
