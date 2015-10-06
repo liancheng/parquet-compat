@@ -15,11 +15,13 @@ package object write {
     directly(DirectParquetWriter.builder(path, schema).build())(f)
   }
 
+  // format: OFF
   def directly
       (parquetWriter: ParquetWriter[RecordBuilder])
       (f: => ParquetWriter[RecordBuilder] => Unit): Unit = {
     try f(parquetWriter) finally parquetWriter.close()
   }
+  // format: ON
 
   def message(builder: RecordBuilder)(implicit writer: ParquetWriter[RecordBuilder]): Unit = {
     message(writer)(builder)

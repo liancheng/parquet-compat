@@ -17,10 +17,11 @@ private[read] class DirectReadSupport(requestedSchema: MessageType, discard: Boo
   }
 
   override def prepareForRead(
-      configuration: Configuration,
-      keyValueMetaData: JMap[String, String],
-      fileSchema: MessageType,
-      readContext: ReadContext): RecordMaterializer[MessageEvents] = {
+    configuration: Configuration,
+    keyValueMetaData: JMap[String, String],
+    fileSchema: MessageType,
+    readContext: ReadContext
+  ): RecordMaterializer[MessageEvents] = {
     new DirectRecordMaterializer(requestedSchema, discard)
   }
 }

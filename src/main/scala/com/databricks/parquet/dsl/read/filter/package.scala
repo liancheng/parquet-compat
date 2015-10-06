@@ -15,20 +15,20 @@ package object filter {
   val string = binaryColumn _
 
   implicit class EqNotEq[T <: Comparable[T]](column: Column[T] with SupportsEqNotEq) {
-    def === (literal: T): Eq[T] = FilterApi.eq(column, literal)
-    def !== (literal: T): NotEq[T] = notEq(column, literal)
+    def ===(literal: T): Eq[T] = FilterApi.eq(column, literal)
+    def !==(literal: T): NotEq[T] = notEq(column, literal)
   }
 
   implicit class LtGt[T <: Comparable[T]](column: Column[T] with SupportsLtGt) {
-    def < (literal: T): Lt[T] = lt(column, literal)
-    def <= (literal: T): LtEq[T] = ltEq(column, literal)
-    def > (literal: T): Gt[T] = gt(column, literal)
-    def >= (literal: T): GtEq[T] = gtEq(column, literal)
+    def <(literal: T): Lt[T] = lt(column, literal)
+    def <=(literal: T): LtEq[T] = ltEq(column, literal)
+    def >(literal: T): Gt[T] = gt(column, literal)
+    def >=(literal: T): GtEq[T] = gtEq(column, literal)
   }
 
   implicit class AndOrNot(self: FilterPredicate) {
-    def && (other: FilterPredicate): FilterPredicate = and(self, other)
-    def || (other: FilterPredicate): FilterPredicate = or(self, other)
+    def &&(other: FilterPredicate): FilterPredicate = and(self, other)
+    def ||(other: FilterPredicate): FilterPredicate = or(self, other)
     def unary_! : FilterPredicate = not(self)
   }
 

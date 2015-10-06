@@ -1,4 +1,8 @@
+import scalariform.formatter.preferences._
+
 import com.github.bigtoast.sbtthrift.{ThriftPlugin => Thrift}
+import com.typesafe.sbt.SbtScalariform
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys.preferences
 import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import pl.project13.scala.sbt.JmhPlugin
 import sbt.Keys._
@@ -9,12 +13,14 @@ import sbtprotobuf.{ProtobufPlugin => ProtoBuf}
 object Build extends sbt.Build {
   lazy val parquetCompat =
     Project("parquet-compat", file("."))
+      .enablePlugins(JmhPlugin)
+      .enablePlugins(SbtScalariform)
       .settings(basicSettings: _*)
       .settings(avroSettings: _*)
       .settings(thriftSettings: _*)
       .settings(protobufSettings: _*)
       .settings(dependencySettings: _*)
-      .enablePlugins(JmhPlugin)
+      .settings(scalariformSettings: _*)
 
   lazy val basicSettings =
     Seq(
@@ -61,6 +67,13 @@ object Build extends sbt.Build {
       sourceDirectory in ProtoBuf.protobufConfig <<= sourceDirectory(_ / "main" / "protobuf"),
       // Location of generated Java files
       javaSource in ProtoBuf.protobufConfig <<= sourceManaged(_ / "main" / "proto" / "gen-java"))
+
+  lazy val scalariformSettings =
+    SbtScalariform.scalariformSettings ++ Seq(
+      preferences := preferences.value
+        .setPreference(DoubleIndentClassDeclaration, false)
+        .setPreference(SpacesAroundMultiImports, false)
+        .setPreference(PreserveDanglingCloseParenthesis, true))
 }
 
 object Dependencies {
