@@ -44,7 +44,8 @@ object BlackholeBenchmark {
         .warmupIterations(1)
         .measurementIterations(5)
         .forks(1)
-        .build())
+        .build()
+    )
       .run()
   }
 }
