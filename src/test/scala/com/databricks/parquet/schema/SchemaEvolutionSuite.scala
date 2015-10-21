@@ -47,8 +47,8 @@ class SchemaEvolutionSuite extends ParquetSuite {
               AvroParquet370Nested.newBuilder()
                 .setC(null)
                 .setD(null)
-                .build())
-            .build()
+                .build()
+            ).build()
 
         expectException[TestFailedException] {
           assert(actual.toString === expected.toString)
@@ -66,8 +66,8 @@ class SchemaEvolutionSuite extends ParquetSuite {
             .as(DECIMAL)
             .precision(9)
             .scale(0)
-            .named("f"))
-        .named("root")
+            .named("f")
+        ).named("root")
 
     expectException[TestFailedException] {
       assert(expected.union(expected) === expected)

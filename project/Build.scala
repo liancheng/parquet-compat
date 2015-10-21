@@ -33,7 +33,7 @@ object Build extends sbt.Build {
 
   lazy val dependencySettings =
     graphSettings ++ Seq(
-      retrieveManaged := true,
+      retrieveManaged := false,
       resolvers ++= Dependencies.extraResolvers,
       libraryDependencies ++= Dependencies.all,
       // Disables auto conflict resolution
