@@ -50,7 +50,8 @@ class ListCompatibilitySuite extends ParquetSuite {
         withAvroParquetReader[GenericRecord](path) { reader =>
           val expected = Seq(
             Seq(0: Integer, 1: Integer).asJava,
-            Seq(2: Integer, 3: Integer).asJava).asJava
+            Seq(2: Integer, 3: Integer).asJava
+          ).asJava
 
           assert(reader.read().get("f") === expected)
         }
@@ -100,7 +101,8 @@ class ListCompatibilitySuite extends ParquetSuite {
         withAvroParquetReader[GenericRecord](path) { reader =>
           val expected = Seq(
             Seq(0: Integer, 1: Integer).asJava,
-            Seq(2: Integer, 3: Integer).asJava).asJava
+            Seq(2: Integer, 3: Integer).asJava
+          ).asJava
 
           assert(reader.read().get("f") === expected)
         }

@@ -42,10 +42,9 @@ object BlackholeBenchmark {
       new OptionsBuilder()
         .include(classOf[BlackholeBenchmark].getSimpleName)
         .warmupIterations(1)
-        .measurementIterations(5)
+        .measurementIterations(1)
         .forks(1)
         .build()
-    )
-      .run()
+    ).run()
   }
 }
