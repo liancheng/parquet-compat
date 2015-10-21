@@ -47,7 +47,8 @@ class SchemaEvolutionSuite extends ParquetSuite {
               AvroParquet370Nested.newBuilder()
                 .setC(null)
                 .setD(null)
-                .build())
+                .build()
+            )
             .build()
 
         expectException[TestFailedException] {
@@ -66,7 +67,8 @@ class SchemaEvolutionSuite extends ParquetSuite {
             .as(DECIMAL)
             .precision(9)
             .scale(0)
-            .named("f"))
+            .named("f")
+        )
         .named("root")
 
     expectException[TestFailedException] {
