@@ -6,6 +6,8 @@ import com.databricks.parquet.ParquetSuite
 import com.databricks.parquet.avro.AvroArrayOfOptionalInts
 import com.databricks.parquet.dsl._
 import org.apache.avro.generic.GenericRecord
+import org.apache.hadoop.conf.Configuration
+import org.apache.parquet.avro.{AvroParquetWriter, AvroWriteSupport}
 
 class ListCompatibilitySuite extends ParquetSuite {
   test("PARQUET-364: read a Parquet record containing an Avro \"array<array<int>>\"") {
@@ -110,7 +112,7 @@ class ListCompatibilitySuite extends ParquetSuite {
     }
   }
 
-  test("write an Avro array of optional integers") {
+  test("write an Avro array of optional integers using legacy format") {
     withTempHadoopPath { path =>
       val schema = AvroArrayOfOptionalInts.getClassSchema
       withAvroParquetWriter[AvroArrayOfOptionalInts](path, schema) { writer =>
@@ -118,6 +120,31 @@ class ListCompatibilitySuite extends ParquetSuite {
         expectException[NullPointerException] {
           writer.write(AvroArrayOfOptionalInts.newBuilder().setF(arrayOfOptionalInts).build())
         }
+      }
+    }
+  }
+
+  test("write an Avro array of optional integers using standard format") {
+    withTempHadoopPath { path =>
+      val schema = AvroArrayOfOptionalInts.getClassSchema
+
+      val conf = new Configuration
+      conf.set(AvroWriteSupport.WRITE_OLD_LIST_STRUCTURE, "false")
+
+      val writer = AvroParquetWriter
+        .builder[AvroArrayOfOptionalInts](path)
+        .withSchema(schema)
+        .withConf(conf)
+        .build()
+
+      val arrayOfOptionalInts = Seq(1: Integer, null, 2: Integer, null).asJava
+
+      withParquetWriter(writer) { writer =>
+        writer.write(AvroArrayOfOptionalInts.newBuilder().setF(arrayOfOptionalInts).build())
+      }
+
+      withAvroParquetReader[AvroArrayOfOptionalInts](path) { reader =>
+        assert(reader.read().getF === arrayOfOptionalInts)
       }
     }
   }

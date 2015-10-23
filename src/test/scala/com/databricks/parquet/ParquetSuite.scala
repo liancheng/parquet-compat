@@ -44,13 +44,16 @@ abstract class ParquetSuite extends FunSuite {
     try f(new Path(directory.getCanonicalPath)) finally deleteRecursively(directory)
   }
 
+  def withParquetWriter[T](writer: ParquetWriter[T])(f: ParquetWriter[T] => Unit): Unit = {
+    try f(writer) finally writer.close()
+  }
+
   def withThriftParquetWriter[T <: TBase[_, _]](
     path: Path,
     thriftClass: Class[T],
     compressionCodecName: CompressionCodecName = CompressionCodecName.UNCOMPRESSED
-  )(f: ThriftParquetWriter[T] => Unit): Unit = {
-    val writer = new ThriftParquetWriter[T](path, thriftClass, compressionCodecName)
-    try f(writer) finally writer.close()
+  )(f: ParquetWriter[T] => Unit): Unit = {
+    withParquetWriter(new ThriftParquetWriter[T](path, thriftClass, compressionCodecName))(f)
   }
 
   def withAvroParquetWriter[T <: IndexedRecord](
@@ -63,16 +66,16 @@ abstract class ParquetSuite extends FunSuite {
       .withCompressionCodec(compressionCodecName)
       .build()
 
-    try f(writer) finally writer.close()
+    withParquetWriter(writer)(f)
   }
 
   def withProtoParquetWriter[T <: Message](
     path: Path,
     protoClass: Class[T],
     compressionCodecName: CompressionCodecName = CompressionCodecName.UNCOMPRESSED
-  )(f: ProtoParquetWriter[T] => Unit): Unit = {
+  )(f: ParquetWriter[T] => Unit): Unit = {
     val writer = new ProtoParquetWriter[T](path, protoClass)
-    try f(writer) finally writer.close()
+    withParquetWriter(writer)(f)
   }
 
   def withParquetReader[T](reader: ParquetReader[T])(f: ParquetReader[T] => Unit): Unit = {
