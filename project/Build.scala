@@ -139,7 +139,8 @@ object Dependencies {
     "org.apache.parquet" % "parquet-avro" % Versions.parquetMr,
     "org.apache.parquet" % "parquet-thrift" % Versions.parquetMr,
     "org.apache.parquet" % "parquet-protobuf" % Versions.parquetMr,
-    "org.apache.parquet" % "parquet-hive" % Versions.parquetMr)
+    "org.apache.parquet" % "parquet-hive" % Versions.parquetMr,
+    "org.apache.parquet" % "parquet-tools" % Versions.parquetMr)
 
   val protobuf = Seq(
     "com.google.protobuf" % "protobuf-java" % Versions.protobuf)
