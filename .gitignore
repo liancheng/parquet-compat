@@ -2,3 +2,4 @@
 target/
 lib_managed/
 build/*.jar
+.sbtopts
