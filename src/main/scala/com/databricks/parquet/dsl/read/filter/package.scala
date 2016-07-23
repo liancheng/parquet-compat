@@ -1,5 +1,7 @@
 package com.databricks.parquet.dsl.read
 
+import scala.language.implicitConversions
+
 import org.apache.parquet.filter2.compat.FilterCompat
 import org.apache.parquet.filter2.predicate.FilterApi._
 import org.apache.parquet.filter2.predicate.Operators._
