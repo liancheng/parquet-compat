@@ -27,8 +27,8 @@ object Build extends sbt.Build {
       organization := "com.databricks",
       version := "0.1.0-SNAPSHOT",
       scalaVersion := Dependencies.Versions.scala,
-      scalacOptions ++= Seq("-unchecked", "-deprecation"),
-      javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-g"),
+      scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
+      javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-g", "-Xlint:-options"),
       fork := true)
 
   lazy val dependencySettings =
@@ -72,8 +72,7 @@ object Build extends sbt.Build {
     SbtScalariform.scalariformSettings ++ Seq(
       preferences := preferences.value
         .setPreference(DoubleIndentClassDeclaration, false)
-        .setPreference(SpacesAroundMultiImports, false)
-        .setPreference(PreserveDanglingCloseParenthesis, true))
+        .setPreference(SpacesAroundMultiImports, false))
 }
 
 object Dependencies {
@@ -91,7 +90,8 @@ object Dependencies {
     val parquetMr = "1.8.1"
     val paranamer = "2.6"
     val protobuf = "2.5.0"
-    val scala = "2.10.4"
+    val scala = "2.11.8"
+    val scalaXml = "1.0.2"
     val scalaMeter = "0.7"
     val scalaTest = "2.2.5"
     val scopt = "3.3.0"
@@ -149,6 +149,9 @@ object Dependencies {
     "org.scala-lang" % "scala-library" % Versions.scala,
     "org.scala-lang" % "scala-reflect" % Versions.scala)
 
+  val scalaModules = Seq(
+    "org.scala-lang.modules" %% "scala-xml" % Versions.scalaXml)
+
   val scalaMeter = Seq(
     "com.storm-enroute" %% "scalameter" % Versions.scalaMeter)
 
@@ -176,5 +179,5 @@ object Dependencies {
 
   val overrides = Set.empty ++
     asm ++ avro ++ commons ++ elephantBird ++ jackson ++ paranamer ++ parquetFormat ++
-    protobuf ++ scala ++ snappy ++ thrift ++ slf4j
+    protobuf ++ scala ++ scalaModules ++ snappy ++ thrift ++ slf4j
 }
