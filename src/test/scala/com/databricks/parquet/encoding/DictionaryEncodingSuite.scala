@@ -29,7 +29,7 @@ class DictionaryEncodingSuite extends ParquetSuite {
           .withDictionaryPageSize(128)
           .withPageSize(128)
           .withRowGroupSize(1024 * 2)
-          .withWriterVersion(WriterVersion.PARQUET_2_0)
+          .withWriterVersion(WriterVersion.PARQUET_1_0)
           .withWriteMode(Mode.OVERWRITE)
           .withCompressionCodec(CompressionCodecName.UNCOMPRESSED)
           .build()
