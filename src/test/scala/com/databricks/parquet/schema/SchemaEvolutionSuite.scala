@@ -2,9 +2,10 @@ package com.databricks.parquet.schema
 
 import com.databricks.parquet.ParquetSuite
 import com.databricks.parquet.avro.{AvroParquet370, AvroParquet370Nested}
-import com.databricks.parquet.dsl.write._
+import com.databricks.parquet.dsl.{read, write}
 import org.apache.hadoop.conf.Configuration
 import org.apache.parquet.avro.{AvroParquetReader, AvroReadSupport}
+import org.apache.parquet.io.ParquetDecodingException
 import org.apache.parquet.schema.Types
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName._
 import org.apache.parquet.schema.OriginalType._
@@ -22,12 +23,12 @@ class SchemaEvolutionSuite extends ParquetSuite {
           |}
         """.stripMargin
 
-      directly(path, schema) { implicit writer =>
-        message { implicit consumer =>
-          field(0, "n") {
-            group {
-              field(0, "a") { int(0) }
-              field(1, "b") { int(1) }
+      write.directly(path, schema) { implicit writer =>
+        write.message { implicit consumer =>
+          write.field(0, "n") {
+            write.group {
+              write.field(0, "a") { write.int(0) }
+              write.field(1, "b") { write.int(1) }
             }
           }
         }
@@ -71,6 +72,46 @@ class SchemaEvolutionSuite extends ParquetSuite {
 
     expectException[TestFailedException] {
       assert(expected.union(expected) === expected)
+    }
+  }
+
+  test("PARQUET-893") {
+    withTempHadoopPath { path =>
+      val schema =
+        """message root {
+          |  required group f0 {
+          |    optional int32 f00;
+          |  }
+          |  required int32 f1;
+          |}
+          |""".stripMargin
+
+      write.directly(path, schema) { implicit writer =>
+        write.message { implicit consumer =>
+          write.field(0, "f0") {
+            write.group {
+              write.field(0, "f00") { write.int(0) }
+            }
+          }
+
+          write.field(1, "f1") { write.int(0) }
+        }
+      }
+
+      val requestedSchema =
+        """message root {
+          |  required group f0 {
+          |    optional int32 f01;
+          |  }
+          |  required int32 f1;
+          |}
+          |""".stripMargin
+
+      expectException[ParquetDecodingException] {
+        read.directly(path, requestedSchema) { implicit events =>
+          read.purge()
+        }
+      }
     }
   }
 }
